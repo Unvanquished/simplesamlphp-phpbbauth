@@ -45,11 +45,22 @@ class sspmod_phpbbauth_Auth_Source_Auth extends sspmod_core_Auth_UserPassBase {
             throw new SimpleSAML_Error_Error('WRONGUSERPASS');
         }
         $row = $ret['user_row'];
+
+        $db = $phpbb_container->get('dbal.conn');
+        $sql = "SELECT phpbb_groups.group_name FROM `phpbb_user_group` LEFT JOIN phpbb_groups ON
+        phpbb_user_group.group_id = phpbb_groups.group_id WHERE user_id=" . (int)$row['user_id'];
+        $ret = $db->sql_query($sql);
+        $groups = array();
+        foreach ($db->sql_fetchrowset($ret) as $entry) {
+            $groups[] = $entry['group_name'];
+        }
+        $db->sql_freeresult($ret);
         $attributes = array(
             'uid' => array($row['user_id']),
             'name' => array($row['username']),
             'username' => array($row['username']),
             'email' => array($row['user_email']),
+            'groups' => $groups,
         );
         return $attributes;
     }
