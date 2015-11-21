@@ -46,10 +46,10 @@ class sspmod_phpbbauth_Auth_Source_Auth extends sspmod_core_Auth_UserPassBase {
         }
         $row = $ret['user_row'];
         $attributes = array(
-            'uid' => $row['user_id'],
-            'name' => $row['username'],
-            'username' => $row['username'],
-            'email' => $row['user_email'],
+            'uid' => array($row['user_id']),
+            'name' => array($row['username']),
+            'username' => array($row['username']),
+            'email' => array($row['user_email']),
         );
         return $attributes;
     }
