@@ -37,6 +37,13 @@ class sspmod_phpbbauth_Auth_Source_Auth extends sspmod_core_Auth_UserPassBase {
         // Set up container
         $phpbb_container_builder = new \phpbb\di\container_builder($phpbb_config_php_file, $phpbb_root_path, $phpEx);
         $phpbb_container = $phpbb_container_builder->get_container();
+        $config = $phpbb_container->get('config');
+        set_config(null, null, null, $config);
+        set_config_count(null, null, null, $config);
+	global $db;
+	$db = $phpbb_container->get('dbal.conn');
+	global $phpbb_extension_manager;
+	$phpbb_extension_manager = $phpbb_container->get('ext.manager');
         $provider_collection = $phpbb_container->get('auth.provider_collection');
         $phpbb_container->get('request')->enable_super_globals();
         $auth = $provider_collection->get_provider('auth.provider.db');
@@ -46,8 +53,7 @@ class sspmod_phpbbauth_Auth_Source_Auth extends sspmod_core_Auth_UserPassBase {
         }
         $row = $ret['user_row'];
 
-        $db = $phpbb_container->get('dbal.conn');
-        $sql = "SELECT phpbb_groups.group_name FROM `phpbb_user_group` LEFT JOIN phpbb_groups ON
+       $sql = "SELECT phpbb_groups.group_name FROM `phpbb_user_group` LEFT JOIN phpbb_groups ON
         phpbb_user_group.group_id = phpbb_groups.group_id WHERE user_id=" . (int)$row['user_id'];
         $ret = $db->sql_query($sql);
         $groups = array();
