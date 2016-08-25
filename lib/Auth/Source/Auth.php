@@ -40,7 +40,9 @@ class sspmod_phpbbauth_Auth_Source_Auth extends sspmod_core_Auth_UserPassBase {
         $config = $phpbb_container->get('config');
         set_config(null, null, null, $config);
         set_config_count(null, null, null, $config);
+	global $user;
 	global $db;
+	$user = $phpbb_container->get('user');
 	$db = $phpbb_container->get('dbal.conn');
 	global $phpbb_extension_manager;
 	$phpbb_extension_manager = $phpbb_container->get('ext.manager');
